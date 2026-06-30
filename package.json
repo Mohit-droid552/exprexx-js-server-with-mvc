@@ -1,0 +1,14 @@
+{
+  "name": "express-api-demo",
+  "version": "1.0.0",
+  "description": "Express web server demonstrating routes, query params, request body, and middleware",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "morgan": "^1.10.0"
+  },
+  "private": true
+}
