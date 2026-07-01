@@ -1,127 +1,120 @@
-# Express API Server Demo
+# Express MVC CRUD API with MongoDB Atlas
 
-A simple Express web server demonstrating the use of path parameters, query parameters, request body parsing, built-in, third-party, and custom logging middleware.
+An Express.js server using MVC architecture, Mongoose, and MongoDB Atlas for user CRUD operations.
 
-## Features
+## Project Structure
 
-1. **Middlewares**:
-   - **Inbuilt**: `express.json()` to parse JSON payloads.
-   - **Third-party**: `morgan` HTTP request logger.
-   - **Custom**: Request logger middleware printing URL, Method, Timestamp, and IP.
-
-2. **Routes**:
-   - `GET /`: API welcome and endpoint overview.
-   - `GET /users/:id`: Path parameters to retrieve a single user.
-   - `GET /search`: Query parameters to filter users.
-   - `POST /users`: Request body payload to add a new user.
-
----
-
-## Setup & Running
-
-1. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-2. **Start the server**:
-   ```bash
-   npm start
-   ```
-   The server will run on `http://localhost:3000`.
-
----
-
-## API Documentation & Examples
-
-### Custom Middleware Logging Output
-Every request will log information to the console in the following format:
 ```text
-[2026-06-30T15:10:00.000Z] GET /users/1 - Client IP: ::1
+express-server/
+  server.js
+  src/
+    app.js
+    config/
+      db.js
+    controllers/
+      userController.js
+    middleware/
+      errorHandler.js
+      notFound.js
+      requestLogger.js
+    models/
+      userModel.js
+    routes/
+      userRoutes.js
 ```
 
-### 1. Root Endpoint (GET `/`)
-Retrieves API documentation.
-- **Request**:
-  ```bash
-  curl http://localhost:3000/
-  ```
-- **Response**:
-  ```json
-  {
-    "message": "Welcome to the Express Demo API!",
-    "documentation": { ... }
-  }
-  ```
+## Setup
 
-### 2. Get User by ID (GET `/users/:id`)
-Demonstrates **Path Parameters**.
-- **Request**:
-  ```bash
-  curl http://localhost:3000/users/2
-  ```
-- **Response**:
-  ```json
-  {
-    "message": "User retrieved successfully",
-    "data": {
-      "id": 2,
-      "name": "Mohit Sharma",
-      "email": "mohit.sharma@example.com",
-      "role": "user"
-    }
-  }
-  ```
+```bash
+npm install
+```
 
-### 3. Search Users (GET `/search`)
-Demonstrates **Query Parameters**.
-- **Request**:
-  ```bash
-  curl "http://localhost:3000/search?role=user&name=mohit"
-  ```
-- **Response**:
-  ```json
-  {
-    "queryReceived": {
-      "role": "user",
-      "name": "mohit"
-    },
-    "count": 2,
-    "data": [
-      {
-        "id": 2,
-        "name": "Mohit Sharma",
-        "email": "mohit.sharma@example.com",
-        "role": "user"
-      },
-      {
-        "id": 3,
-        "name": "Mohit Sharma",
-        "email": "mohit.sharma@example.com",
-        "role": "user"
-      }
-    ]
-  }
-  ```
+Create a `.env` file from `.env.example`, then replace the placeholder `MONGO_URI` with your MongoDB Atlas connection string.
 
-### 4. Create User (POST `/users`)
-Demonstrates **Request Body**.
-- **Request**:
-  ```bash
-  curl -X POST \
-    -H "Content-Type: application/json" \
-    -d '{"name": "Mohit Sharma", "email": "mohit.sharma@example.com", "role": "admin"}' \
-    http://localhost:3000/users
-  ```
-- **Response**:
-  ```json
-  {
-    "message": "User created successfully",
-    "data": {
-      "id": 4,
-      "name": "Mohit Sharma",
-      "email": "mohit.sharma@example.com",
-      "role": "admin"
-    }
-  }
-  ```
+```env
+PORT=3000
+MONGO_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/express_mvc_crud?retryWrites=true&w=majority
+```
+
+If Node shows a `querySrv ECONNREFUSED` error for a `mongodb+srv://` URI, use the standard multi-host `mongodb://` URI format shown in `.env.example`.
+
+Start the server:
+
+```bash
+npm start
+```
+
+The server runs at `http://localhost:3000`.
+
+## MongoDB Atlas Checklist
+
+1. Create a MongoDB Atlas cluster.
+2. Create a database user.
+3. Add your current IP address in Atlas Network Access.
+4. Copy the Node.js driver connection string.
+5. Paste it into `.env` as `MONGO_URI`.
+6. Keep `.env` private. It is already ignored by Git.
+
+## API Routes
+
+### API Info
+
+```bash
+curl http://localhost:3000/
+```
+
+### Get All Users
+
+```bash
+curl http://localhost:3000/api/users
+```
+
+Optional query filters:
+
+```bash
+curl "http://localhost:3000/api/users?role=user&name=priya"
+```
+
+### Get User By ID
+
+```bash
+curl http://localhost:3000/api/users/1
+```
+
+### Create User
+
+```bash
+curl -X POST http://localhost:3000/api/users \
+  -H "Content-Type: application/json" \
+  -d "{\"name\":\"Neha Singh\",\"email\":\"neha.singh@example.com\",\"role\":\"user\"}"
+```
+
+### Replace User
+
+```bash
+curl -X PUT http://localhost:3000/api/users/1 \
+  -H "Content-Type: application/json" \
+  -d "{\"name\":\"Mohit Sharma\",\"email\":\"mohit.updated@example.com\",\"role\":\"admin\"}"
+```
+
+### Update User
+
+```bash
+curl -X PATCH http://localhost:3000/api/users/1 \
+  -H "Content-Type: application/json" \
+  -d "{\"role\":\"user\"}"
+```
+
+### Delete User
+
+```bash
+curl -X DELETE http://localhost:3000/api/users/1
+```
+
+## MVC Responsibilities
+
+- **Model**: `src/models/userModel.js` stores and changes user data.
+- **Config**: `src/config/db.js` connects the app to MongoDB Atlas.
+- **Controller**: `src/controllers/userController.js` handles request logic and responses.
+- **Routes**: `src/routes/userRoutes.js` maps HTTP methods and URLs to controller actions.
+- **Middleware**: `src/middleware/` contains request logging, 404 handling, and error handling.

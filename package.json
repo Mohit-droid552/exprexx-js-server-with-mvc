@@ -1,13 +1,15 @@
 {
   "name": "express-api-demo",
   "version": "1.0.0",
-  "description": "Express web server demonstrating routes, query params, request body, and middleware",
+  "description": "Express MVC CRUD API with routes, controllers, models, and middleware",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "express": "^4.19.2",
+    "mongoose": "^9.7.3",
     "morgan": "^1.10.0"
   },
   "private": true
